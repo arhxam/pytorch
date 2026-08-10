@@ -836,6 +836,8 @@ class Hardshrink(Module):
         0, & \text{ otherwise }
         \end{cases}
 
+    See :func:`torch.nn.functional.hardshrink` for the functional equivalent.
+
     Args:
         lambd: the :math:`\lambda` value for the Hardshrink formulation. Default: 0.5
 
@@ -1017,6 +1019,8 @@ class Softshrink(Module):
         x + \lambda, & \text{ if } x < -\lambda \\
         0, & \text{ otherwise }
         \end{cases}
+
+    See :func:`torch.nn.functional.softshrink` for the functional equivalent.
 
     Args:
         lambd: the :math:`\lambda` (must be no less than zero) value for the Softshrink formulation. Default: 0.5
@@ -1686,6 +1690,8 @@ class Tanhshrink(Module):
 
     .. math::
         \text{Tanhshrink}(x) = x - \tanh(x)
+
+    See :func:`torch.nn.functional.tanhshrink` for the functional equivalent.
 
     Shape:
         - Input: :math:`(*)`, where :math:`*` means any number of dimensions.

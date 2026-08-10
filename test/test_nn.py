@@ -2431,6 +2431,15 @@ tensor(..., device='meta', size=(1,), requires_grad=True)""")
         self.assertEqual(component_wise_loss,
                          F.gaussian_nll_loss(input, target_part, var_part2, reduction='none'))
 
+        input = torch.randn(4, 3, 2, 2)
+        target = torch.randn_like(input)
+        var = torch.rand(4, 3, 1, 1) + 0.1
+        expected = 0.5 * (torch.log(var) + (input - target) ** 2 / var)
+        self.assertEqual(
+            F.gaussian_nll_loss(input, target, var, reduction="none"),
+            expected,
+        )
+
     def test_gaussian_nll_loss_args(self):
         input = torch.randn(3, 5)
         with self.assertRaisesRegex(ValueError, 'var is of incorrect size'):

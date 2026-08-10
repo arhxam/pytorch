@@ -3354,6 +3354,10 @@ def gaussian_nll_loss(
     # If var.size == input.size, the case is heteroscedastic and no further checks are needed.
     # Otherwise:
     if var.size() != input.size():
+        input_var_sizes = zip(input.size(), var.size(), strict=True)
+        var_is_broadcastable = input.ndim == var.ndim and all(
+            x == y or y == 1 for x, y in input_var_sizes
+        )
         # If var is one dimension short of input, but the sizes match otherwise, then this is a homoscedastic case.
         # e.g. input.size = (10, 2, 3), var.size = (10, 2)
         # -> unsqueeze var so that var.shape = (10, 2, 1)
@@ -3361,15 +3365,12 @@ def gaussian_nll_loss(
         if input.size()[:-1] == var.size():
             var = torch.unsqueeze(var, -1)
 
-        # This checks if the var is broadcastable to the input and there is only one mismatched dimension.
+        # This checks if var has the same number of dimensions as input and is
+        # broadcastable to it.
         # This is also a homoscedastic case.
         # e.g. input.size = (10, 2, 3), var.size = (10, 2, 1)
         # or  input.size = (4, 3, 32, 32), var.size = (4, 1, 32, 32)
-        elif (
-            input.ndim == var.ndim
-            and sum(y for x, y in zip(input.size(), var.size(), strict=True) if x != y)
-            == 1
-        ):  # Heteroscedastic case
+        elif var_is_broadcastable:  # Homoscedastic case
             pass
 
         # If none of the above pass, then the size of var is incorrect.

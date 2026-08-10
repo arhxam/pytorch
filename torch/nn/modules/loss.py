@@ -389,8 +389,9 @@ class GaussianNLLLoss(_Loss):
 
     where :attr:`eps` is used for stability. By default, the constant term of
     the loss function is omitted unless :attr:`full` is ``True``. If ``var`` is not the same
-    size as ``input`` (due to a homoscedastic assumption), it must either have a final dimension
-    of 1 or have one fewer dimension (with all other sizes being the same) for correct broadcasting.
+    size as ``input`` (due to a homoscedastic assumption), it must either have
+    a size of 1 in every differing dimension or have one fewer dimension (with
+    all other sizes being the same) for correct broadcasting.
 
     Args:
         full (bool, optional): include the constant term in the loss
@@ -408,9 +409,10 @@ class GaussianNLLLoss(_Loss):
           dimensions
         - Target: :math:`(N, *)` or :math:`(*)`, same shape as the input, or same shape as the input
           but with one dimension equal to 1 (to allow for broadcasting)
-        - Var: :math:`(N, *)` or :math:`(*)`, same shape as the input, or same shape as the input but
-          with one dimension equal to 1, or same shape as the input but with one fewer
-          dimension (to allow for broadcasting), or a scalar value
+        - Var: :math:`(N, *)` or :math:`(*)`, same shape as the input, or same
+          number of dimensions as the input with size 1 in every dimension that
+          differs, or same shape as the input but with one fewer dimension (to
+          allow for broadcasting), or a scalar value
         - Output: scalar if :attr:`reduction` is ``'mean'`` (default) or
           ``'sum'``. If :attr:`reduction` is ``'none'``, then :math:`(N, *)`, same
           shape as the input

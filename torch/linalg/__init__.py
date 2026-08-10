@@ -2283,14 +2283,16 @@ Supports inputs of float, double, cfloat and cdouble dtypes.
 Also supports batches of matrices, and if the inputs are batches of matrices then
 the output has the same batch dimensions.
 
-Letting `*` be zero or more batch dimensions,
+Letting `*` be the batch dimensions of :attr:`A`,
 
-- If :attr:`A` has shape `(*, n, n)` and :attr:`B` has shape `(*, n)` (a batch of vectors) or shape
-  `(*, n, k)` (a batch of matrices or "multiple right-hand sides"), this function returns `X` of shape
-  `(*, n)` or `(*, n, k)` respectively.
-- Otherwise, if :attr:`A` has shape `(*, n, n)` and  :attr:`B` has shape `(n,)`  or `(n, k)`, :attr:`B`
-  is broadcasted to have shape `(*, n)` or `(*, n, k)` respectively.
-  This function then returns the solution of the resulting batch of systems of linear equations.
+- If :attr:`B` has shape `(n,)`, it is broadcast across the batch dimensions of
+  :attr:`A`, and the output has shape `(*, n)`.
+- If :attr:`B` has shape `(*, n)`, it is treated as a batch of vectors and the
+  output has the same shape. These batch dimensions must match :attr:`A`
+  exactly.
+- Otherwise, :attr:`B` is treated as a batch of matrices. If it has shape
+  `(*B, n, k)`, where `*B` is broadcastable with `*`, the output has shape
+  `(*C, n, k)`, where `*C` is the result of broadcasting `*` and `*B`.
 
 .. note::
     This function computes `X = \ `:attr:`A`\ `.inverse() @ \ `:attr:`B` in a faster and

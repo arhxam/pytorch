@@ -1318,6 +1318,10 @@ def originate_pairs(
             # is only in a separate branch, because the one below would also except it.
             except ErrorMeta:
                 raise
+            # Preserve resource exhaustion so callers can handle it and avoid
+            # formatting the inputs while memory is unavailable.
+            except torch.OutOfMemoryError:
+                raise
             # Raising any other exception during origination is unexpected and will give some extra information about
             # what happened. If applicable, the exception should be expected in the future.
             except Exception as error:
@@ -1385,6 +1389,10 @@ def not_close_error_metas(
             pair.compare()
         except ErrorMeta as error_meta:
             error_metas.append(error_meta)
+        # Preserve resource exhaustion so callers can handle it and avoid
+        # formatting the pair while memory is unavailable.
+        except torch.OutOfMemoryError:
+            raise
         # Raising any exception besides `ErrorMeta` while comparing is unexpected and will give some extra information
         # about what happened. If applicable, the exception should be expected in the future.
         except Exception as error:
